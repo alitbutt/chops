@@ -41,6 +41,58 @@ for (c = 0; x; c++) { x &= vx- 1; }
 Computing parity in parallel (32 Bit):
 x ^= x >> 16; x ^= x >> 8; x ^= x >> 4; x &= 0xf; return (0x6996 >> x) & 1;
 
+/*
+Read a bit at a specific position
+*/
+bitmask = 0b1
+
+//the highlighted bits are moved all the way to the right, then all other bits are cancelled out with the bitmask
+(0b1101 >> 2) & bitmask = 1
+(0b1101 >> 1) & bitmask = 0
+
+//to get two bits
+bitmask = 0b11
+(0b1101) >> 2) & bitmask = 11
+
+/*
+Set a bit
+*/
+byte = 0b0000
+byte | (0b1 << 2) = 0100
+
+//to set a specific bit to 0, you must use the AND operator.
+byte = 0b1111
+byte & (0b0 << 2) = 1011
+
+//dynamically set the value
+x = 1 // new value of bit...
+n = 2 // at this location
+byte = 0b0010
+
+byte ^ (-x ^ byte) & (1 << n) = 0110
+
+/*
+Toggle a bit at a specific position
+*/
+n = 2 // at this location
+byte = 0b0100
+byte ^ (0b1 << n) = 0000
+
+/*
+Store flags
+*/
+FLAG_FIN    = 0b000001
+FLAG_SYN    = 0b000010
+FLAG_RESET  = 0b000100
+FLAG_PUSH   = 0b001000
+FLAG_ACK    = 0b010000
+FLAG_URGENT = 0b100000
+
+// Set header to SYN, ACK and URGENT (110010)
+header = FLAG_SYN | FLAG_ACK | FLAG_URGENT
+
+// Turn off URGENT flag
+header = header & ~FLAG_URGENT
 
 /*
 Left bit shifting to multiply by any power of two
