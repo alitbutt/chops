@@ -1,0 +1,145 @@
+========================
+C/C++ bitwise operations
+========================
+&     AND
+|     OR
+^     XOR
+~     NOT
+<<    SHIFT (left)
+>>    SHIFT (right)
+
+===================
+Integer arithmetics
+===================
+x = y << n                    Multiply by n times 2
+x = y >> n                    Divide by n times 2
+return (x & 1) == 0           Is x even?
+return (x && !(x & (x - 1)))  Is x power of 2?
+return (x ^ y) < 0            Has x opposite sign than y?
+y ^ ((x ^ y) & -(x < y))      min(x,y)
+x ^ ((x ^ y) & -(x < y))      max(x,y)
+
+=====================
+Single bit operations
+=====================
+y = x | (1<<n)        Set the nth bit
+y = x & ~(1<<n)       Unset the nth bit
+y = x ^ (1<<n)        Toggle the nth bit
+return x & (1<<n)     Test if the nth bit is set
+y = x & (x-1)         Turn off rightmost 1bit
+y = x & (-x)          Isolate rightmost 1bit
+y = x | (x-1)         Right propagate rightmost 1bit (fill in ones)
+y = x | (x+1)         Turn on rightmost 0bit
+y = ~x & (x+1)        Isolate rightmost 0bit
+
+===============
+Useful snippets
+===============
+Counting (c) bits set in x:
+for (c = 0; x; c++) { x &= vx- 1; }
+
+Computing parity in parallel (32 Bit):
+x ^= x >> 16; x ^= x >> 8; x ^= x >> 4; x &= 0xf; return (0x6996 >> x) & 1;
+
+
+/*
+Left bit shifting to multiply by any power of two
+Approximately 300% faster.
+*/
+
+x = x * 2;
+x = x * 64;
+
+//equals:
+x = x << 1;
+x = x << 6;
+
+/*
+Right bit shifting to divide by any power of two
+Approximately 350% faster.
+*/
+
+x = x / 2;
+x = x / 64;
+
+//equals:
+x = x >> 1;
+x = x >> 6;
+
+/*
+Swap integers without a temporary variable using XOR
+Pretty neat trick, it is explained in detail in the link at the top of the page. This is 20% faster.
+*/
+
+var t:int = a;
+a = b;
+b = t;
+
+//equals:
+a ^= b;
+b ^= a;
+a ^= b;
+
+/*
+Increment/decrement
+This is much slower than the pre/post decrement operator, but a nice way to obfuscate your code ;-)
+*/
+
+i = -~i; // i++
+i = ~-i; // i--
+
+/*
+Sign flipping using NOT or XOR
+Strangely enough, this is 300%(!) faster.
+*/
+
+i = -i;
+
+//equals
+i = ~i + 1;
+
+//or
+i = (i ^ -1) + 1;
+
+/*
+Fast modulo operation using bitwise AND
+If the divisor is a power of 2, the modulo (%) operation can be done with:
+modulus = numerator & (divisor - 1);
+This is about 600% faster.
+*/
+
+x = 131 % 4;
+
+//equals:
+x = 131 & (4 - 1);
+
+/*
+Check if an integer is even/uneven using bitwise AND
+This is 600% faster.
+*/
+
+isEven = (i % 2) == 0;
+
+//equals:
+isEven = (i & 1) == 0;
+
+/*
+Absolute value
+Forget Math.abs() for time critical code. Version 1 is 2500% faster than Math.abs(), and the funky bitwise version 2 is again 20% faster than version 1.
+*/
+
+//version 1
+i = x < 0 ? -x : x;
+
+//version 2
+i = (x ^ (x >> 31)) - (x >> 31);
+
+/*
+Comparing two integers for equal sign
+This is 35% faster.
+*/
+
+eqSign = a * b > 0;
+
+//equals:
+eqSign = a ^ b >= 0;
