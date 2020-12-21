@@ -195,3 +195,12 @@ eqSign = a * b > 0;
 
 //equals:
 eqSign = a ^ b >= 0;
+
+
+===================
+Bit Twiddling Hacks
+===================
+
+https://graphics.stanford.edu/~seander/bithacks.html
+
+
